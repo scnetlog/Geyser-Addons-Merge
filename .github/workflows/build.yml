@@ -37,7 +37,7 @@ jobs:
           setup-java_java-version: 25
 
       - name: Build Geyser
-        run: ./gradlew build
+        run: ./gradlew :bootstrap:mod:fabric:build
         env:
           BUILD_NUMBER: ${{ steps.release-info.outputs.curentRelease }}
           
