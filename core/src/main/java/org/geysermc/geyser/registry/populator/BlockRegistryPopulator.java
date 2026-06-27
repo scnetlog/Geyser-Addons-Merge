@@ -382,6 +382,17 @@ public final class BlockRegistryPopulator {
                 }
             }
 
+            // [FD-Bridge] 填充数组中所有 null 位置为 air，防止区块翻译时 getBedrockBlock 返回 null 导致 NPE
+            // 这解决了原版方块状态末尾到 MIN_CUSTOM_RUNTIME_ID 之间的空隙问题
+            for (int i = 0; i < javaToBedrockBlocks.length; i++) {
+                if (javaToBedrockBlocks[i] == null) {
+                    javaToBedrockBlocks[i] = airDefinition;
+                }
+                if (i < javaToVanillaBedrockBlocks.length && javaToVanillaBedrockBlocks[i] == null) {
+                    javaToVanillaBedrockBlocks[i] = airDefinition;
+                }
+            }
+
             javaToBedrockIdentifiers.trim();
 
             // Loop around again to find all item frame runtime IDs
