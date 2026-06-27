@@ -108,6 +108,14 @@ public abstract class GeyserModBootstrap implements GeyserBootstrap {
                 "ModdedBlockStateBridge.collect() failed, modded block overrides may not work: " + t);
         }
 
+        // 同理，枚举服务端模组物品，供扩展通过 GeyserDefineCustomItemsEvent 注册自定义物品使用。
+        try {
+            org.geysermc.geyser.platform.mod.bridge.ModdedItemBridge.collect();
+        } catch (Throwable t) {
+            GeyserImpl.getInstance().getLogger().warning(
+                "ModdedItemBridge.collect() failed, modded item registration may not work: " + t);
+        }
+
         GeyserImpl.start();
 
         if (!geyserConfig.motd().integratedPingPassthrough()) {
