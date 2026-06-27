@@ -114,6 +114,13 @@ public class ResourcePackLoader implements RegistryLoader<Path, Map<UUID, Resour
             resourcePacks = new ArrayList<>();
         }
 
+        // 调试日志：打印扫描到的资源包
+        GeyserImpl.getInstance().getLogger().info("[ResourcePackLoader] 扫描 packs 目录: " + directory);
+        GeyserImpl.getInstance().getLogger().info("[ResourcePackLoader] 发现 " + resourcePacks.size() + " 个资源包文件");
+        for (Path p : resourcePacks) {
+            GeyserImpl.getInstance().getLogger().info("[ResourcePackLoader]   - " + p.getFileName());
+        }
+
         // Add custom skull pack
         Path skullResourcePack = SkullResourcePackManager.createResourcePack();
         if (skullResourcePack != null) {
@@ -129,6 +136,7 @@ public class ResourcePackLoader implements RegistryLoader<Path, Map<UUID, Resour
         for (Path path : event.resourcePacks()) {
             try {
                 defineEvent.register(readPack(path).build());
+                GeyserImpl.getInstance().getLogger().info("[ResourcePackLoader] 成功注册资源包: " + path.getFileName());
             } catch (Exception e) {
                 GeyserImpl.getInstance().getLogger().error(GeyserLocale.getLocaleStringLog("geyser.resource_pack.broken", path));
                 e.printStackTrace();
