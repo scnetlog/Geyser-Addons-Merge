@@ -41,6 +41,7 @@ viaproxy = "3.4.11"
 fabric-loader = "0.19.2"
 fabric-api = "0.148.2+26.1.2"
 fabric-permissions-api = "0.7.0"
+fabric-permission-api-v1 = "1.0.2+7c33558a9e"
 neoforge-minecraft = "26.1.2.48-beta"
 mixin = "0.8.5"
 mixinextras = "0.5.3"
@@ -128,6 +129,7 @@ minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft
 fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric-loader" }
 fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
 fabric-permissions-api = { group = "me.lucko", name = "fabric-permissions-api", version.ref = "fabric-permissions-api" }
+fabric-permission-api-v1 = { group = "net.fabricmc.fabric-api", name = "fabric-permission-api-v1", version.ref = "fabric-permission-api-v1" }
 
 neoforge-minecraft = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge-minecraft" }
 

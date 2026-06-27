@@ -19,7 +19,7 @@ loom {
 
 dependencies {
     implementation(libs.fabric.loader)
-    modApi(libs.fabric.api)
+    api(libs.fabric.api)
 
     api(project(":mod"))
     shadowBundle(project(path = ":mod", configuration = "transformProductionFabric"))
@@ -49,7 +49,11 @@ dependencies {
     implementation(libs.cloud.fabric)
     include(libs.cloud.fabric)
     include(libs.fabric.permissions.api)
-    implementation(libs.fabric.permissions.api)
+    // fabric-api umbrella 不再包含 fabric-permission-api-v1，但编译期解析
+    // ServerPlayer::createCommandSourceStack 方法引用时 javac 需要访问
+    // net.fabricmc.fabric.api.permission.v1.PermissionContextOwner 接口，
+    // 因此显式将其加入 compile classpath。
+    api(libs.fabric.permission.api.v1)
 }
 
 tasks.withType<Jar> {
