@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.cloud.fabric)
     include(libs.cloud.fabric)
     include(libs.fabric.permissions.api)
+    implementation(libs.fabric.permissions.api)
 }
 
 tasks.withType<Jar> {
