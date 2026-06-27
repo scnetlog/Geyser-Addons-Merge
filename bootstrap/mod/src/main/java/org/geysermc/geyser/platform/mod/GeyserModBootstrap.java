@@ -98,6 +98,16 @@ public abstract class GeyserModBootstrap implements GeyserBootstrap {
             }
         }
 
+        // 在 Geyser 正式启动（注册表 populate）前，先枚举服务端模组方块状态，
+        // 供扩展通过 GeyserDefineCustomBlocksEvent 注册 non-vanilla override 使用。
+        // 必须在 GeyserImpl.start() 之前完成，因为 start() 会触发 GeyserDefineCustomBlocksEvent。
+        try {
+            org.geysermc.geyser.platform.mod.bridge.ModdedBlockStateBridge.collect();
+        } catch (Throwable t) {
+            GeyserImpl.getInstance().getLogger().warning(
+                "ModdedBlockStateBridge.collect() failed, modded block overrides may not work: " + t);
+        }
+
         GeyserImpl.start();
 
         if (!geyserConfig.motd().integratedPingPassthrough()) {
