@@ -19,7 +19,7 @@ loom {
 
 dependencies {
     implementation(libs.fabric.loader)
-    api(libs.fabric.api)
+    modApi(libs.fabric.api)
 
     api(project(":mod"))
     shadowBundle(project(path = ":mod", configuration = "transformProductionFabric"))
