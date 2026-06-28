@@ -39,6 +39,7 @@ import org.cloudburstmc.protocol.bedrock.data.definitions.BlockDefinition;
 import org.cloudburstmc.protocol.bedrock.data.definitions.ItemDefinition;
 import org.cloudburstmc.protocol.bedrock.data.inventory.ItemData;
 import org.geysermc.geyser.api.block.custom.CustomBlockData;
+import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.entity.attribute.GeyserAttributeType;
 import org.geysermc.geyser.inventory.GeyserItemStack;
 import org.geysermc.geyser.inventory.item.Potion;
@@ -603,7 +604,9 @@ public final class ItemTranslator {
                 if (customName != null) {
                     // Get the translated name and prefix it with a reset char to prevent italics - matches Java Edition
                     // behavior as of 1.21
-                    return ChatColor.RESET + ChatColor.ESCAPE + translationColor + MessageTranslator.convertMessage(customName, session.locale());
+                    String converted = MessageTranslator.convertMessage(customName, session.locale());
+                    GeyserImpl.getInstance().getLogger().info("[ItemTranslate] 物品 " + mapping.getJavaItem().javaIdentifier() + " 有 ITEM_NAME 组件, locale=" + session.locale() + ", 转换结果=" + converted);
+                    return ChatColor.RESET + ChatColor.ESCAPE + translationColor + converted;
                 }
             }
         }
@@ -612,9 +615,12 @@ public final class ItemTranslator {
             // No custom name, but we need to localize the item's name
             String translationKey = mapping.getTranslationString();
             // Reset formatting since Bedrock defaults to italics
-            return ChatColor.RESET + ChatColor.ESCAPE + translationColor + MinecraftLocale.getLocaleString(translationKey, session.locale());
+            String translated = MinecraftLocale.getLocaleString(translationKey, session.locale());
+            GeyserImpl.getInstance().getLogger().info("[ItemTranslate] 物品 " + mapping.getJavaItem().javaIdentifier() + " 使用 translationString, key=" + translationKey + ", locale=" + session.locale() + ", 翻译结果=" + translated);
+            return ChatColor.RESET + ChatColor.ESCAPE + translationColor + translated;
         }
         // No custom name
+        GeyserImpl.getInstance().getLogger().info("[ItemTranslate] 物品 " + mapping.getJavaItem().javaIdentifier() + " 无自定义名称 (hasTranslation=" + mapping.hasTranslation() + ")");
         return null;
     }
 
