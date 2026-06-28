@@ -243,6 +243,14 @@ public class UpstreamPacketHandler extends LoggingPacketHandler {
         resourcePacksInfo.setWorldTemplateId(UUID.randomUUID());
         resourcePacksInfo.setWorldTemplateVersion("*");
 
+        // 调试日志：确认资源包信息发送给客户端
+        GeyserImpl.getInstance().getLogger().info("[ResourcePack] 发送 ResourcePacksInfoPacket 给客户端 " + session.bedrockUsername());
+        GeyserImpl.getInstance().getLogger().info("[ResourcePack] 资源包数量: " + resourcePacksInfo.getResourcePackInfos().size());
+        for (var info : resourcePacksInfo.getResourcePackInfos()) {
+            GeyserImpl.getInstance().getLogger().info("[ResourcePack]   - UUID: " + info.getPackId() + ", version: " + info.getPackVersion());
+        }
+        GeyserImpl.getInstance().getLogger().info("[ResourcePack] forcedToAccept: " + resourcePacksInfo.isForcedToAccept());
+
         session.sendUpstreamPacket(resourcePacksInfo);
 
         GeyserLocale.loadGeyserLocale(session.locale());
@@ -262,6 +270,7 @@ public class UpstreamPacketHandler extends LoggingPacketHandler {
 
         switch (packet.getStatus()) {
             case COMPLETED -> {
+                GeyserImpl.getInstance().getLogger().info("[ResourcePack] 客户端 " + session.bedrockUsername() + " 状态: COMPLETED (所有资源包已加载)");
                 finishedResourcePackSending = true;
                 if (geyser.config().java().authType() != AuthType.ONLINE) {
                     session.authenticate(session.getAuthData().name());
@@ -273,6 +282,10 @@ public class UpstreamPacketHandler extends LoggingPacketHandler {
                     " (" + session.protocolVersion() + ")"));
             }
             case SEND_PACKS -> {
+                GeyserImpl.getInstance().getLogger().info("[ResourcePack] 客户端 " + session.bedrockUsername() + " 状态: SEND_PACKS (请求下载 " + packet.getPackIds().size() + " 个资源包)");
+                for (String packId : packet.getPackIds()) {
+                    GeyserImpl.getInstance().getLogger().info("[ResourcePack]   客户端请求包: " + packId);
+                }
                 // Bedrock clients can send empty "send_packs" responses, in which case we shouldn't send anything back
                 if (!packet.getPackIds().isEmpty()) {
                     packsToSend.addAll(packet.getPackIds());
@@ -281,6 +294,7 @@ public class UpstreamPacketHandler extends LoggingPacketHandler {
                 }
             }
             case HAVE_ALL_PACKS -> {
+                GeyserImpl.getInstance().getLogger().info("[ResourcePack] 客户端 " + session.bedrockUsername() + " 状态: HAVE_ALL_PACKS (已有所有资源包)");
                 ResourcePackStackPacket stackPacket = new ResourcePackStackPacket();
                 stackPacket.setExperimentsPreviouslyToggled(false);
                 stackPacket.setForcedToAccept(false); // Leaving this as false allows the player to choose to download or not
